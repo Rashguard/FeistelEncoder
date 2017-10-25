@@ -7,9 +7,6 @@ def keyGen(left, right):
     leftKey = format(int("0x" + left, 16), '016b')
     rightKey = format(int("0x" + right, 16), '016b')
 
-    print("left key : %s" % (leftKey), end='    ')
-    print("right key : %s" % (rightKey))
-
     leftKey1 = leftKey[1:] + leftKey[0]
     leftKey2 = leftKey1[1:] + leftKey1[0]
     leftKey3 = leftKey2[1:] + leftKey2[0]
@@ -235,78 +232,35 @@ def encrypt10(word, key):
     leftText = format(int("0x" + word[0:8], 16), '032b')
     rightText = format(int("0x" + word[8:16], 16), '032b')
 
-    # print("original left text : %s" % (leftText), end='    ')
-    # print("original right text : %s" % (rightText))
-
     left1 = rightText
     right1 = xor32(leftText, feistel(rightText, keyList[0]))
-    # print("1st round left text : %s" % (left1), end='    ')
-    # print32(left1)
-    # print("1st round right text : %s" % (right1), end='    ')
-    # print32(right1)
 
     left2 = right1
     right2 = xor32(left1, feistel(right1, keyList[1]))
-    # print("2nd round left text : %s" % (left2), end='    ')
-    # print32(left2)
-    # print("2nd round right text : %s" % (right2), end='    ')
-    # print32(right2)
 
     left3 = right2
     right3 = xor32(left2, feistel(right2, keyList[2]))
-    # print("3rd round left text : %s" % (left3), end='    ')
-    # print32(left3)
-    # print("3rd round right text : %s" % (right3), end='    ')
-    # print32(right3)
 
     left4 = right3
     right4 = xor32(left3, feistel(right3, keyList[3]))
-    # print("4th round left text : %s" % (left4), end='    ')
-    # print32(left4)
-    # print("4th round right text : %s" % (right4), end='    ')
-    # print32(right4)
 
     left5 = right4
     right5 = xor32(left4, feistel(right4, keyList[4]))
-    # print("5th round left text : %s" % (left5), end='    ')
-    # print32(left5)
-    # print("5th round right text : %s" % (right5), end='    ')
-    # print32(right5)
 
     left6 = right5
     right6 = xor32(left5, feistel(right5, keyList[5]))
-    # print("6th round left text : %s" % (left6), end='    ')
-    # print32(left6)
-    # print("6th round right text : %s" % (right6), end='    ')
-    # print32(right6)
 
     left7 = right6
     right7 = xor32(left6, feistel(right6, keyList[6]))
-    # print("7th round left text : %s" % (left7), end='    ')
-    # print32(left7)
-    # print("7th round right text : %s" % (right7), end='    ')
-    # print32(right7)
 
     left8 = right7
     right8 = xor32(left7, feistel(right7, keyList[7]))
-    # print("8th round left text : %s" % (left8), end='    ')
-    # print32(left8)
-    # print("8th round right text : %s" % (right8), end='    ')
-    # print32(right8)
 
     left9 = right8
     right9 = xor32(left8, feistel(right8, keyList[8]))
-    # print("9th round left text : %s" % (left9), end='    ')
-    # print32(left9)
-    # print("9th round right text : %s" % (right9), end='    ')
-    # print32(right9)
 
     left10 = right9
     right10 = xor32(left9, feistel(right9, keyList[9]))
-    # print("10th round left text : %s" % (left10), end='    ')
-    # print32(left10)
-    # print("10th round right text : %s" % (right10), end='    ')
-    # print32(right10)
 
     left11 = right10
     right11 = left10
@@ -320,12 +274,11 @@ def encrypt10(word, key):
 
 def attack(plaintext, ciphertext):
 
-    key = 'f2afffff'
+    key = 'ffffffff'
     cipher = format(int("0x" + ciphertext, 16), '064b')     # 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
     result = encrypt10(plaintext, key)                      # 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
-    # result = str(hex(int(encrypt10(plaintext, key), 2))[2:].zfill(16))
 
-    while result != cipher and key != 'f2a00000':
+    while result != cipher and key != '00000000':
 
         key = str(hex(int("0x" + key, 16) - 1)[2:].zfill(8))
         result = encrypt10(plaintext, key)
@@ -372,15 +325,16 @@ def main():
 
             key = attack(plainText, cipherText)
 
-            print("The key is...")
+            print("Result : ", end='')
             print(key)
 
         elif option == 0:
-            print("Bye Bye")
+            print("Bye Bye!")
             sys.exit()
 
         else:
             print("I don't understand...")
+            continue
 
 ########################################################################
 
